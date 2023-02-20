@@ -17,3 +17,9 @@ curl -X POST -H "Content-Type: application/json" \
 curl -X POST -H "Content-Type: application/json" \
       -d "@grafana-request-with-common-labels.json" \
       "http://${APPRISE_SERVER}:${APPRISE_GATEWAY_PORT}/from_grafana/notify/config-key"
+
+# request from source 'grafana' and apprise key 'config-key'
+# -> specify tag and format with query parameter:
+curl -X POST -H "Content-Type: application/json" \
+      -d "@grafana-request.json" \
+      "http://${APPRISE_SERVER}:${APPRISE_GATEWAY_PORT}/from_grafana/notify/config-key?tag=my-apprise-tag&format=markdown"

@@ -30,7 +30,7 @@ def notify(source, apprise_key):
 
     log.debug('passing notification data: %s', apprise_data)
     apprise_request_url = '{}/{}/{}'.format(APPRISE_URL, 'notify', apprise_key)
-    requests.post(apprise_request_url, data=apprise_data)
+    requests.post(apprise_request_url, data=apprise_data, params=request.args)
 
     return jsonify(apprise_data)
 
