@@ -1,9 +1,9 @@
 import logging
 import requests
 import os
-from flask import Flask, request, jsonify
+from flask import abort, Flask, jsonify, request
 
-import grafana
+from converterloader import ConverterLoader
 
 app = Flask(__name__)
 
@@ -17,13 +17,18 @@ log = logging.getLogger(__name__)
 def health():
     return 'OK'
 
-@app.route('/from_grafana/notify/<apprise_key>', methods=['POST'])
-def notify(apprise_key):
+@app.route('/from_<source>/notify/<apprise_key>', methods=['POST'])
+def notify(source, apprise_key):
     log.debug('request url: %s', request.url)
 
-    apprise_data = grafana.get_apprise_data(request)
-    log.debug('passing notification data: %s', apprise_data)
+    converter = ConverterLoader.load(source)
+    try:
+        apprise_data = converter.get_apprise_data(request)
+    except Exception as exception:
+        current_app.logger.error("Error applying converter: %s", exception)
+        abort(500, description='Error applying converter for source: ' + source)
 
+    log.debug('passing notification data: %s', apprise_data)
     apprise_request_url = '{}/{}/{}'.format(APPRISE_URL, 'notify', apprise_key)
     requests.post(apprise_request_url, data=apprise_data)
 
