@@ -1,0 +1,159 @@
+---
+openapi: 3.0.3
+info:
+  title: apprise-it-for-me API
+  description: >-
+    [apprise-it-for-me](https://github.com/mrtwnklr/apprise-it-for-me) is a
+    gateway for [Apprise](https://github.com/caronc/apprise).
+
+    It accepts HTTP POST data, transforms it into an Apprise notification
+    payload and sends it to an [Apprise API
+    server](https://github.com/caronc/apprise-api/).
+  version: 0.1.0
+paths:
+  /health:
+    get:
+      operationId: Healthcheck
+      summary: Simple healthcheck
+      responses:
+        '200':
+          description: OK
+  /from_{source}/notify/{key}:
+    post:
+      operationId: Generic_SendNotification
+      summary: >-
+        Forwards a notification request to Apprise. Uses a custom source
+        converter to create the Apprise notification payload.
+      parameters:
+        - $ref: '#/components/parameters/source'
+        - $ref: '#/components/parameters/key'
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersistentNotificationResponse'
+        '400':
+          description: Source key invalid
+        '404':
+          description: Source converter not found
+        '500':
+          description: Source converter failed
+      tags:
+        - notify
+  /from_grafana/notify/{key}:
+    post:
+      operationId: SendNotification_FromGrafana
+      summary: Forwards a Grafana alert notification to Apprise.
+      parameters:
+        - $ref: '#/components/parameters/key'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequestFromGrafana'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersistentNotificationResponse'
+        '500':
+          description: Source converter failed
+      tags:
+        - notify
+components:
+  parameters:
+    source:
+      in: path
+      name: source
+      description: Notification source key (e.g. application name)
+      required: true
+      schema:
+        type: string
+      example: my-custom-source
+    key:
+      in: path
+      name: key
+      description: Apprise configuration key
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 64
+      example: to-matrix
+  schemas:
+    NotificationType:
+      type: string
+      enum:
+        - info
+        - warning
+        - failure
+        - success
+      example: failure
+    NotificationFormat:
+      type: string
+      enum:
+        - text
+        - markdown
+        - html
+      example: markdown
+    PersistentNotificationResponse:
+      properties:
+        message:
+          type: string
+          example: Alert one is firing
+        title:
+          type: string
+          example: Alert one
+        notification_type:
+          $ref: '#/components/schemas/NotificationType'
+        format:
+          $ref: '#/components/schemas/NotificationFormat'
+        tag:
+          type: string
+          example: all
+      required:
+        - body
+    NotificationRequestFromGrafana:
+      properties:
+        body:
+          type: string
+          example: Alert one is firing
+        title:
+          type: string
+          example: Alert one
+        status:
+          type: string
+          enum:
+            - firing
+            - resolved
+          example: firing
+        commonLabels:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Overrides top level title
+              example: Alert one
+            notification_type:
+              type: string
+              description: Overrides top level status
+              enum:
+                - firing
+                - resolved
+              example: firing
+            format:
+              $ref: '#/components/schemas/NotificationFormat'
+            tag:
+              type: string
+              example: all
+      required:
+        - body
