@@ -8,7 +8,7 @@ class ConverterLoader:
             abort(400, description='Invalid source key: ' + source)
 
         try:
-            converterModule = importlib.import_module('converter.' + source, __name__)
+            converterModule = importlib.import_module("{}.{}".format(__package__, source), __name__)
         except:
             abort(404, description='Cannot find converter for source key: ' + source)
 

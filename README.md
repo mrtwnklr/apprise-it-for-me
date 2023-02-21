@@ -41,4 +41,16 @@ Application support is currently limited to [Grafana](https://github.com/grafana
 The values of the following [`commonLabels` webhook fields](https://grafana.com/docs/grafana/latest/alerting/manage-notifications/webhook-notifier/) are copied to the Apprise notification payload:
 `tag`, `format`, `notification_type`, `title`.
 
-Details see [`converter/grafana.py`](converter/grafana.py).
+Details see [`application/converter/grafana.py`](application/converter/grafana.py).
+
+## Development environment
+
+1. To prepare your development execute the following make target.
+   It initializes a Python virtualenv, installs dependencies and further development tools.
+   It requires Python to be already installed.
+
+   ```bash
+   make dev-install-virtualenv
+   ```
+
+2. To adjust configuration variables copy `.env.sample` into `.env` and modify it.

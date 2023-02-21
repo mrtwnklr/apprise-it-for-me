@@ -1,6 +1,4 @@
-import logging
-
-log = logging.getLogger(__name__)
+from flask import current_app
 
 class GrafanaConverter:
     STATUS_TYPE_MAPPING = {
@@ -16,7 +14,7 @@ class GrafanaConverter:
     # Grafana: see https://grafana.com/docs/grafana/latest/alerting/manage-notifications/webhook-notifier/
     def get_apprise_data(self, request):
         request_data = request.json
-        log.debug('request data: %s', request_data)
+        current_app.logger.debug('request data: %s', request_data)
 
         apprise_data = {}
         apprise_data['body'] = request_data.get('message', '')
