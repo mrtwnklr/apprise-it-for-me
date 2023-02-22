@@ -35,6 +35,7 @@ Apprise, on the other hand, expects a predefined data structure.
 ### Application specific mapping
 
 Application support is currently limited to [Grafana](https://github.com/grafana/grafana).
+**But extension is easy, [see below](#add-support-for-another-application)!**
 
 1. **Grafana:**
 
@@ -72,3 +73,46 @@ Application support is currently limited to [Grafana](https://github.com/grafana
    ```bash
    make dev-run
    ```
+
+### Add support for another application
+
+To support another application you need to implement the mapping from the original notification request to the Apprise notification body.
+
+This mapping logic must be placed in a dedicated Python module under [application/converter/](application/converter/):
+
+* The module must have an unique name.
+  This name will be used as `{APPLICATION}` field in the api url ([see above](#common)).
+* The module must define a class.
+* The class name must be built from the module name and the suffix `Converter`.
+  The first character must be upper case.
+* The class must define a method named `get_apprise_data`.
+* The method must accept a [Flask request](https://flask.palletsprojects.com/en/2.2.x/api/#incoming-request-data) object.
+  Typically, the method would consume [`request.data`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Request.get_data) or [`request.json`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Request.get_json).
+* The method must return a filled Apprise POST request body (see <https://github.com/caronc/apprise-api#api-details>).
+
+See [application/converter/sample.py](application/converter/sample.py) for a minimal sample:
+
+```python
+from flask import current_app
+
+
+class SampleConverter:
+    # Apprise: supported fields are:
+    #            body, title, notification_type, tag und format
+    #          see https://github.com/caronc/apprise-api#api-details
+    def get_apprise_data(self, request):
+        # load application specific request data
+        request_data = request.json
+        current_app.logger.debug("request data: %s", request_data)
+
+        # fill Apprise fields from application specific request data
+        apprise_data = {}
+        apprise_data["body"] = request_data.get("the_body", "")
+        apprise_data["title"] = request_data.get("the_title", "")
+        apprise_data["notification_type"] = request_data.get("the_type", "")
+        apprise_data["tag"] = request_data.get("the_tag", "")
+        apprise_data["format"] = request_data.get("the_format", "")
+
+        # return Apprise notification data
+        return apprise_data
+```
