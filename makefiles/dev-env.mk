@@ -23,6 +23,10 @@ dev-run: dev-install-virtualenv
 dev-run: ## Run a development server
 	FLASK_APP=manage.py pipenv run flask run
 
+.PHONY: dev-run-docker-compose
+dev-run-docker-compose: ## Run as docker container together with an Apprise test instance
+	docker-compose up
+
 # ---------------------------------------------------------------------------------------------------------------------
 # qa
 

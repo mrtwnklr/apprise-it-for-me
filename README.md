@@ -54,9 +54,9 @@ Application support is currently limited to [Grafana](https://github.com/grafana
 
 ## Development
 
-### Prepare environment
+### Variant 1: execute with Python on development host
 
-1. To prepare your development execute the following make target.
+1. To prepare your development environment execute the following make target.
    It initializes a Python virtualenv, installs dependencies and further development tools.
    It requires Python to be already installed.
 
@@ -64,14 +64,22 @@ Application support is currently limited to [Grafana](https://github.com/grafana
    make dev-install-virtualenv
    ```
 
-### Run application
+2. To adjust configuration variables copy `.env.sample` to `.env` and modify it.
 
-1. To adjust configuration variables copy `.env.sample` into `.env` and modify it.
-
-1. To run the development server execute the following make target:
+3. To run the development server execute the following make target:
 
    ```bash
    make dev-run
+   ```
+
+### Variant 2: execute as Docker container
+
+1. If you do not want to prepare/use a Python development environment
+   you can execute your local development state in a Docker container.
+   To do so execute the following make target:
+
+   ```bash
+   make dev-run-docker-compose
    ```
 
 ### Add support for another application

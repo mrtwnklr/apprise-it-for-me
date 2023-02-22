@@ -1,0 +1,29 @@
+---
+services:
+  apprise-it-for-me:
+    build: .
+    container_name: apprise-it-for-me
+    environment:
+      - APPRISE_URL=http://apprise:8000
+      - LOGLEVEL=DEBUG
+    ports:
+      - 8001:8001
+    volumes:
+      # mount local state of development
+      - ./application:/apprise-it-for-me/application:ro
+      - ./manage.py:/apprise-it-for-me/manage.py:ro
+    networks:
+      - apprise
+    depends_on:
+      - apprise
+
+  apprise:
+    container_name: apprise
+    image: caronc/apprise:v0.8.3
+    ports:
+      - 8000:8000
+    networks:
+      - apprise
+
+networks:
+  apprise:
