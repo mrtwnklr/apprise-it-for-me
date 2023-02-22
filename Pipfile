@@ -7,7 +7,5 @@ name = "pypi"
 flask = "==2.2.3"
 requests = "==2.28.2"
 
-[dev-packages]
-
 [requires]
 python_version = "3.8"

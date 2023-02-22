@@ -45,12 +45,10 @@ Details see [`application/converter/grafana.py`](application/converter/grafana.p
 
 ## Development environment
 
-1. To prepare your development execute the following make target.
-   It initializes a Python virtualenv, installs dependencies and further development tools.
-   It requires Python to be already installed.
+To prepare your development execute the following make target.
+It initializes a Python virtualenv, installs dependencies and further development tools.
+It requires Python to be already installed.
 
-   ```bash
-   make dev-install-virtualenv
-   ```
-
-2. To adjust configuration variables copy `.env.sample` into `.env` and modify it.
+```bash
+make dev-install-virtualenv
+```
