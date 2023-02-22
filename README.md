@@ -36,19 +36,39 @@ Apprise, on the other hand, expects a predefined data structure.
 
 Application support is currently limited to [Grafana](https://github.com/grafana/grafana).
 
-**Grafana:**
+1. **Grafana:**
 
-The values of the following [`commonLabels` webhook fields](https://grafana.com/docs/grafana/latest/alerting/manage-notifications/webhook-notifier/) are copied to the Apprise notification payload:
-`tag`, `format`, `notification_type`, `title`.
+   Some fields in the Apprise notification payload are copied from the Grafana main request body.
+   Other fields can only be set by providing them as alert labels (see [`commonLabels` webhook fields](https://grafana.com/docs/grafana/latest/alerting/manage-notifications/webhook-notifier/)).
 
-Details see [`application/converter/grafana.py`](application/converter/grafana.py).
+   |Apprise field     |from Grafana field |override with `commonLabels`
+   |-                 |-                  |-
+   |body              |message            |-
+   |title             |title              |title
+   |notification_type |status             |notification_type
+   |format            |-                  |format
+   |tag               |-                  |tag
 
-## Development environment
+   Details see [`application/converter/grafana.py`](application/converter/grafana.py).
 
-To prepare your development execute the following make target.
-It initializes a Python virtualenv, installs dependencies and further development tools.
-It requires Python to be already installed.
+## Development
 
-```bash
-make dev-install-virtualenv
-```
+### Prepare environment
+
+1. To prepare your development execute the following make target.
+   It initializes a Python virtualenv, installs dependencies and further development tools.
+   It requires Python to be already installed.
+
+   ```bash
+   make dev-install-virtualenv
+   ```
+
+### Run application
+
+1. To adjust configuration variables copy `.env.sample` into `.env` and modify it.
+
+1. To run the development server execute the following make target:
+
+   ```bash
+   make dev-run
+   ```
