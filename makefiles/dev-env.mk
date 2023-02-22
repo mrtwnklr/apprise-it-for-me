@@ -9,6 +9,8 @@ dev-install-virtualenv: ## Install packages in Python virtualenv
 
 	pipenv sync --dev
 
+	pipenv run pre-commit install
+
 .PHONY: dev-delete-virtualenv
 dev-delete-virtualenv: ## Remove Python virtualenv
 	pipenv --rm
@@ -20,3 +22,10 @@ dev-delete-virtualenv: ## Remove Python virtualenv
 dev-run: dev-install-virtualenv
 dev-run: ## Run a development server
 	FLASK_APP=manage.py pipenv run flask run
+
+# ---------------------------------------------------------------------------------------------------------------------
+# qa
+
+.PHONY: qa-check-all-files
+qa-check-all-files: ## Execute all checks on all files
+	pipenv run pre-commit run --all-files
