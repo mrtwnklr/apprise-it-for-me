@@ -52,6 +52,10 @@ Application support is currently limited to [Grafana](https://github.com/grafana
 
    Details see [`application/converter/grafana.py`](application/converter/grafana.py).
 
+   **Example:** webhook configuration with Apprise configuration key `to-matrix`:
+
+   ![Grafana webhook configuration](media/grafana.png)
+
 ## Development
 
 ### Variant 1: execute with Python on development host
