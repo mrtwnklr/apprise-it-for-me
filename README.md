@@ -24,9 +24,9 @@ Apprise, on the other hand, expects a predefined data structure.
 1. Typically `apprise-it-for-me` is configured as generic webhook.
    The webhook url follows this pattern:
 
-   > http://`{APPRISE-IT-FOR-ME-SERVER}`:5000/from_`{APPLICATION}`/notify/`{APPRISE-KEY}`
+   > http://`{APPRISE-IT-FOR-ME-SERVER}`:8001/from_`{APPLICATION}`/notify/`{APPRISE-KEY}`
 
-   e.g.: http://metrics.local:5000/from_grafana/notify/to-ntfy
+   e.g.: http://metrics.local:8001/from_grafana/notify/to-ntfy
 
 2. Any query string is forwarded as-is to Apprise.
    This allows to specify `tag`, `title`, `format` and `type` when not already contained in the incoming request data.
