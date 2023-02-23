@@ -1,12 +1,7 @@
 ARG ARCH
 FROM ${ARCH}python:3.8.6-alpine as base
 
-LABEL maintainer="Marty Winkler"
-LABEL org.label-schema.name="mrtwnklr/apprise-it-for-me"
-LABEL org.label-schema.description="Transforms webhook request payloads and sends them to Apprise"
-LABEL org.label-schema.url="https://github.com/mrtwnklr/apprise-it-for-me"
-LABEL org.label-schema.vendor="https://github.com/mrtwnklr"
-LABEL org.label-schema.schema-version="1.0"
+LABEL org.opencontainers.image.authors="Marty Winkler"
 
 # Setup env
 ENV LANG=C.UTF-8
