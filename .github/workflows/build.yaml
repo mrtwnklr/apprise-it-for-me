@@ -27,6 +27,22 @@ jobs:
             type=semver,pattern={{version}}
             type=edge
 
+      # for caching of docker layers see:
+      # https://evilmartians.com/chronicles/build-images-on-github-actions-with-docker-layer-caching
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@2dd22fa31c04297d369158eb483250f578504a9f
+        with:
+          install: true
+
+      - name: Cache Docker layers
+        uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-multi-buildx-${{ hashFiles('Pipfile*') }}-${{ hashFiles('Dockerfile') }}
+          restore-keys: |
+            ${{ runner.os }}-multi-buildx-${{ hashFiles('Pipfile*') }}
+            ${{ runner.os }}-multi-buildx-
+
       - name: Log in to Docker Hub
         uses: docker/login-action@3da7dc6e2b31f99ef2cb9fb4c50fb0971e0d0139
         with:
@@ -40,3 +56,10 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache

@@ -15,7 +15,7 @@ ENV PYTHONUNBUFFERED=1
 FROM base AS python-deps
 
 # Install pipenv
-RUN pip install pipenv
+RUN pip install pipenv==2023.2.18
 
 # Install python dependencies in /.venv
 COPY Pipfile .
