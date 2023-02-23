@@ -27,6 +27,9 @@ jobs:
             type=semver,pattern={{version}}
             type=edge
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@12d39e1bb9d7a0e024b9de8b339a19115b2950fb
+
       # for caching of docker layers see:
       # https://evilmartians.com/chronicles/build-images-on-github-actions-with-docker-layer-caching
       - name: Set up Docker Buildx
@@ -53,6 +56,7 @@ jobs:
         uses: docker/build-push-action@a3ae207c1434ab875aa11554ce639ff512f25e89
         with:
           context: .
+          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6,linux/arm/v7
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
