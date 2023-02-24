@@ -13,6 +13,15 @@ on:
 env:
   SHORT_DESCRIPTION: A gateway that transforms and forwards HTTP POST notification payloads to an Apprise API server.
 
+  README_RELATIVE_LINK_PATTERN: (\[[^]]+\]\()(\#[^)]+\))
+  README_ABSOLUTE_LINK_PREFIX: https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}
+
+  RAW_RELATIVE_LINK_PATTERN: (\[[^]]+\]\()([^:)]+[.](gif|jpeg|jpeg|png|svg)\))
+  RAW_ABSOLUTE_LINK_PREFIX: https://github.com/${{ github.repository }}/raw/${{ github.ref_name }}/
+
+  BLOB_RELATIVE_LINK_PATTERN: (\[[^]]+\]\()([^:)]+\))
+  BLOB_ABSOLUTE_LINK_PREFIX: https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/
+
 jobs:
   dockerHubDescription:
     name: Publish README to Docker Hub
@@ -20,6 +29,12 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+
+      - name: Make relative urls absolute
+        run: |
+          sed -i -E 's#${{ env.README_RELATIVE_LINK_PATTERN }}#\1${{ env.README_ABSOLUTE_LINK_PREFIX }}\2#g' README.md
+          sed -i -E 's#${{ env.RAW_RELATIVE_LINK_PATTERN }}#\1${{ env.RAW_ABSOLUTE_LINK_PREFIX }}\2#g'       README.md
+          sed -i -E 's#${{ env.BLOB_RELATIVE_LINK_PATTERN }}#\1${{ env.BLOB_ABSOLUTE_LINK_PREFIX }}\2#g'     README.md
 
       - name: Publish README
         uses: peter-evans/dockerhub-description@067627a8af8c4a66c03b5b5e896968ca4cafba79
