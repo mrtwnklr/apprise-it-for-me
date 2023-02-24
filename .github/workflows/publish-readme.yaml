@@ -1,0 +1,28 @@
+---
+name: publish-readme
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - README.md
+      - .github/workflows/publish-readme.yaml
+
+env:
+  SHORT_DESCRIPTION: A gateway that transforms and forwards HTTP POST notification payloads to an Apprise API server.
+
+jobs:
+  dockerHubDescription:
+    name: Publish README to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+
+      - name: Publish README
+        uses: peter-evans/dockerhub-description@067627a8af8c4a66c03b5b5e896968ca4cafba79
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
