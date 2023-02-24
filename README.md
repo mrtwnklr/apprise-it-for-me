@@ -7,6 +7,22 @@
 [Apprise](https://github.com/caronc/apprise):
 > allows you to send a notification to almost all of the most popular notification services available to us today such as: Telegram, Discord, Slack, Amazon SNS, Gotify, etc.
 
+[![build](https://github.com/mrtwnklr/apprise-it-for-me/actions/workflows/build.yaml/badge.svg)](https://github.com/mrtwnklr/apprise-it-for-me/actions/workflows/build.yaml)
+
+## Table of content
+
+- [Table of content](#table-of-content)
+- [Rationale](#rationale)
+- [Deployment](#deployment)
+- [Usage](#usage)
+  - [Common](#common)
+  - [Configuration for Grafana](#configuration-for-grafana)
+- [Development](#development)
+  - [Variant 1: execute with Python on development host](#variant-1-execute-with-python-on-development-host)
+  - [Variant 2: execute inside Docker container](#variant-2-execute-inside-docker-container)
+  - [Add support for another application](#add-support-for-another-application)
+  - [And last but not least](#and-last-but-not-least)
+
 ## Rationale
 
 Many applications realize notifications via generic webhooks among others.
@@ -54,42 +70,42 @@ Or take a look at [`./docker-compose.yaml`](docker-compose.yaml) for building an
 
 ## Usage
 
+Application support is currently limited to [Grafana](https://github.com/grafana/grafana).
+**But extension is easy, [see below](#add-support-for-another-application)!**
+
 ### Common
 
 1. Typically `apprise-it-for-me` is configured as generic webhook.
    The webhook url follows this pattern:
 
-   > http://`{APPRISE-IT-FOR-ME-SERVER}`:8001/from_`{APPLICATION}`/notify/`{APPRISE-KEY}`
+   > <http://`{APPRISE-IT-FOR-ME-SERVER}`:8001/from_`{APPLICATION}`/notify/`{APPRISE-KEY}`>
 
-   e.g.: http://metrics.local:8001/from_grafana/notify/to-ntfy
+   e.g.: <http://metrics.local:8001/from_grafana/notify/to-ntfy>
 
 2. Any query string is forwarded as-is to Apprise.
    This allows to specify `tag`, `title`, `format` and `type` when not already contained in the incoming request data.
    For details see [apprise-api #84](https://github.com/caronc/apprise-api/pull/84).
 
-### Application specific mapping
+### Configuration for Grafana
 
-Application support is currently limited to [Grafana](https://github.com/grafana/grafana).
-**But extension is easy, [see below](#add-support-for-another-application)!**
+**Example:** webhook configuration with Apprise configuration key `to-matrix`:
 
-1. **Grafana:**
+![Grafana webhook configuration](media/grafana.png)
 
-   Some fields in the Apprise notification payload are copied from the Grafana main request body.
-   Other fields can only be set by providing them as alert labels (see [`commonLabels` webhook fields](https://grafana.com/docs/grafana/latest/alerting/manage-notifications/webhook-notifier/)).
+**Mapping logic:**
 
-   |Apprise field     |from Grafana field |override with `commonLabels`
-   |-                 |-                  |-
-   |body              |message            |-
-   |title             |title              |title
-   |notification_type |status             |notification_type
-   |format            |-                  |format
-   |tag               |-                  |tag
+Some fields in the Apprise notification payload are copied from the Grafana main request body.
+Other fields can only be set by providing them as alert labels (see [`commonLabels` webhook fields](https://grafana.com/docs/grafana/latest/alerting/manage-notifications/webhook-notifier/)).
 
-   Details see [`application/converter/grafana.py`](application/converter/grafana.py).
+|Apprise field     |from Grafana field |override with `commonLabels`
+|-                 |-                  |-
+|body              |message            |-
+|title             |title              |title
+|notification_type |status             |notification_type
+|format            |-                  |format
+|tag               |-                  |tag
 
-   **Example:** webhook configuration with Apprise configuration key `to-matrix`:
-
-   ![Grafana webhook configuration](media/grafana.png)
+Details see [`./application/converter/grafana.py`](application/converter/grafana.py).
 
 ## Development
 
@@ -103,7 +119,7 @@ Application support is currently limited to [Grafana](https://github.com/grafana
    make dev-install-virtualenv
    ```
 
-2. To adjust configuration variables copy `.env.sample` to `.env` and modify it.
+2. To adjust configuration variables copy [`.env.sample`](.env.sample) to `.env` and modify it.
 
 3. To run the development server execute the following make target:
 
@@ -125,19 +141,9 @@ Application support is currently limited to [Grafana](https://github.com/grafana
 
 To support another application you need to implement the mapping from the original notification request to the Apprise notification body.
 
-This mapping logic must be placed in a dedicated Python module under [application/converter/](application/converter/):
+This mapping logic must be placed in a dedicated Python module under [`./application/converter/`](application/converter/).
 
-* The module must have an unique name.
-  This name will be used as `{APPLICATION}` field in the api url ([see above](#common)).
-* The module must define a class.
-* The class name must be built from the module name and the suffix `Converter`.
-  The first character must be upper case.
-* The class must define a method named `get_apprise_data`.
-* The method must accept a [Flask request](https://flask.palletsprojects.com/en/2.2.x/api/#incoming-request-data) object.
-  Typically, the method would consume [`request.data`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Request.get_data) or [`request.json`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Request.get_json).
-* The method must return a filled Apprise POST request body (see <https://github.com/caronc/apprise-api#api-details>).
-
-See [application/converter/sample.py](application/converter/sample.py) for a minimal sample:
+See [`./application/converter/sample.py`](application/converter/sample.py) for a minimal sample:
 
 ```python
 from flask import current_app
@@ -163,3 +169,19 @@ class SampleConverter:
         # return Apprise notification data
         return apprise_data
 ```
+
+**Specification:**
+
+- The module must have an unique name.
+  This name will be used as `{APPLICATION}` field in the api url ([see above](#common)).
+- The module must define a class.
+- The class name must be built from the module name and the suffix `Converter`.
+  The first character must be upper case.
+- The class must define a method named `get_apprise_data`.
+- The method must accept a [Flask request](https://flask.palletsprojects.com/en/2.2.x/api/#incoming-request-data) object.
+  Typically, the method would consume [`request.data`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Request.get_data) or [`request.json`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Request.get_json).
+- The method must return a filled Apprise POST request body (see [apprise-api details](https://github.com/caronc/apprise-api#api-details)).
+
+### And last but not least
+
+Don't forget to create a pull request! 😊
