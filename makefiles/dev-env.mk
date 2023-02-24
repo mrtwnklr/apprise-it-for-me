@@ -36,5 +36,6 @@ dev-run-docker-compose: ## Run as docker container together with an Apprise test
 # qa
 
 .PHONY: qa-check-all-files
+qa-check-all-files: dev-install-virtualenv
 qa-check-all-files: ## Execute all checks on all files
 	pipenv run pre-commit run --all-files
