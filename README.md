@@ -17,6 +17,41 @@ Apprise, on the other hand, expects a predefined data structure.
 
 `apprise-it-for-me` can provide application specific webhooks, convert the incoming request data and forward it to Apprise.
 
+## Deployment
+
+The preferred deployment method is to use the provided docker image [`mrtwnklr/apprise-it-for-me`](https://hub.docker.com/r/mrtwnklr/apprise-it-for-me/).
+
+Execute it with the docker cli:
+
+```bash
+# specify Apprise url
+# and optionally mount a custom converter into converter subdirectory
+docker run --name apprise-it-for-me \
+   -p 8001:8001 \
+   -e APPRISE_URL=http://apprise.local:8000 \
+   -v ./customconverter.py:/apprise-it-for-me/application/converter/customconverter.py:ro \
+   -d mrtwnklr/apprise-it-for-me:latest
+```
+
+or via `docker-compose.yaml`:
+
+```yaml
+---
+services:
+  apprise-it-for-me:
+    container_name: apprise-it-for-me
+    image: mrtwnklr/apprise-it-for-me:latest
+    environment:
+      - APPRISE_URL=http://apprise.local:8000
+    ports:
+      - 8001:8001
+    volumes:
+      # mount your custom converter into container
+      - ./customconverter.py:/apprise-it-for-me/application/converter/customconverter.py:ro
+```
+
+Or take a look at [`./docker-compose.yaml`](docker-compose.yaml) for building and running the container from source.
+
 ## Usage
 
 ### Common
@@ -76,7 +111,7 @@ Application support is currently limited to [Grafana](https://github.com/grafana
    make dev-run
    ```
 
-### Variant 2: execute as Docker container
+### Variant 2: execute inside Docker container
 
 1. If you do not want to prepare/use a Python development environment
    you can execute your local development state in a Docker container.
