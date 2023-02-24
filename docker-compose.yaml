@@ -5,7 +5,8 @@ services:
     container_name: apprise-it-for-me
     environment:
       - APPRISE_URL=http://apprise:8000
-      - LOGLEVEL=DEBUG
+      #- GUNICORN_PORT=8001
+      - GUNICORN_CMD_ARGS='--log-level=debug'
     ports:
       - 8001:8001
     volumes:

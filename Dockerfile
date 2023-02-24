@@ -35,13 +35,13 @@ RUN addgroup -S apprise-it-for-me && adduser -S apprise-it-for-me -G apprise-it-
 WORKDIR /apprise-it-for-me
 USER apprise-it-for-me
 
-HEALTHCHECK --interval=60s --timeout=3s --retries=6 CMD wget --no-verbose --tries=1 --spider http://localhost:${FLASK_RUN_PORT}/health || exit 1
+HEALTHCHECK --interval=60s --timeout=3s --retries=6 CMD wget --no-verbose --tries=1 --spider http://localhost:${GUNICORN_PORT}/health || exit 1
 
-ENV FLASK_RUN_PORT=8001
-ENV FLASK_APP=manage.py
-EXPOSE ${FLASK_RUN_PORT}/tcp
+ENV GUNICORN_PORT=8001
+ENV WSGI_APP=manage:app
+EXPOSE ${GUNICORN_PORT}/tcp
 
 # Install application into container
 COPY . /apprise-it-for-me
 
-CMD ["flask", "run", "-h", "0.0.0.0"]
+CMD ["sh", "-c", "gunicorn -c application/gunicorn.conf.py -b :${GUNICORN_PORT} --worker-tmp-dir /dev/shm \"${WSGI_APP}\""]

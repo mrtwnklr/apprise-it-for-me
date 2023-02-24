@@ -2,7 +2,6 @@ import os
 
 
 class Config(object):
-    LOGLEVEL = os.environ.get("LOGLEVEL", "ERROR")
     APPRISE_URL = os.environ.get("APPRISE_URL", "http://localhost:8000")
 
 

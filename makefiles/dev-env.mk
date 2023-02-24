@@ -1,5 +1,7 @@
 ## Development
 
+SHELL := /bin/bash
+
 # ---------------------------------------------------------------------------------------------------------------------
 # manage Python virtualenv
 
@@ -21,7 +23,10 @@ dev-delete-virtualenv: ## Remove Python virtualenv
 .PHONY: dev-run
 dev-run: dev-install-virtualenv
 dev-run: ## Run a development server
-	FLASK_APP=manage.py pipenv run flask run
+	. .env ; pipenv run gunicorn --config application/gunicorn.conf.py \
+															 --worker-tmp-dir /dev/shm \
+															 --bind :$${GUNICORN_PORT:-8081} \
+															 'manage:app'
 
 .PHONY: dev-run-docker-compose
 dev-run-docker-compose: ## Run as docker container together with an Apprise test instance
