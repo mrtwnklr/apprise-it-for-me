@@ -1,6 +1,12 @@
 ---
 repos:
 
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: b0808a81d4945c510f9baeaf2cff97dccdd55ed0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+
   - repo: local
     hooks:
       - id: isort

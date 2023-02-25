@@ -11,7 +11,7 @@ dev-install-virtualenv: ## Install packages in Python virtualenv
 
 	pipenv sync --dev
 
-	pipenv run pre-commit install
+	pipenv run pre-commit install --hook-type commit-msg
 
 .PHONY: dev-delete-virtualenv
 dev-delete-virtualenv: ## Remove Python virtualenv
