@@ -7,6 +7,7 @@
 [Apprise](https://github.com/caronc/apprise):
 > allows you to send a notification to almost all of the most popular notification services available to us today such as: Telegram, Discord, Slack, Amazon SNS, Gotify, etc.
 
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 [![build](https://github.com/mrtwnklr/apprise-it-for-me/actions/workflows/build.yaml/badge.svg)](https://github.com/mrtwnklr/apprise-it-for-me/actions/workflows/build.yaml)
 
 ## Table of content
