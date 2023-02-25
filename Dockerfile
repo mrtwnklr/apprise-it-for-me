@@ -1,5 +1,5 @@
 ARG ARCH
-FROM ${ARCH}python:3.8.6-alpine as base
+FROM ${ARCH}python:3.11.2-alpine as base
 
 LABEL org.opencontainers.image.authors="Marty Winkler"
 
