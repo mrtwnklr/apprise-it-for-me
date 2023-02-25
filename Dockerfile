@@ -1,4 +1,6 @@
 ARG ARCH
+# doup:alpine
+# python:3.11.2-alpine
 FROM ${ARCH}python:3.11.2-alpine as base
 
 LABEL org.opencontainers.image.authors="Marty Winkler"

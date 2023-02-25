@@ -39,3 +39,8 @@ dev-run-docker-compose: ## Run as docker container together with an Apprise test
 qa-check-all-files: dev-install-virtualenv
 qa-check-all-files: ## Execute all checks on all files
 	pipenv run pre-commit run --all-files
+
+.PHONY: qa-docker-image-tags
+qa-docker-image-tags: dev-install-virtualenv
+qa-docker-image-tags: ## Show all up-to-date and outdated docker image tags
+	pipenv run doup --dry-run --show-all .

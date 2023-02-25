@@ -20,6 +20,7 @@ services:
 
   apprise:
     container_name: apprise
+    # doup:latest
     image: caronc/apprise:v0.8.3
     ports:
       - 8000:8000
