@@ -40,7 +40,7 @@ qa-check-all-files: dev-install-virtualenv
 qa-check-all-files: ## Execute all checks on all files
 	pipenv run pre-commit run --all-files
 
-.PHONY: qa-docker-image-tags
-qa-docker-image-tags: dev-install-virtualenv
-qa-docker-image-tags: ## Show all up-to-date and outdated docker image tags
-	pipenv run doup --dry-run --show-all .
+.PHONY: qa-list-outdated-docker-image-tags
+qa-list-outdated-docker-image-tags: dev-install-virtualenv
+qa-list-outdated-docker-image-tags: ## List all outdated docker image tags
+	pipenv run doup --dry-run .
