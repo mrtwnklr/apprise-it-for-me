@@ -38,7 +38,7 @@ jobs:
           install: true
 
       - name: Cache Docker layers
-        uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-multi-buildx-${{ hashFiles('Pipfile*') }}-${{ hashFiles('Dockerfile') }}
