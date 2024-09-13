@@ -20,7 +20,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@766400ca14a75010e7b2e3119aa0d5b46826e8c7
+        uses: docker/metadata-action@70b2cdc6480c1a8b86edf1777157f8f437de2166
         with:
           images: mrtwnklr/apprise-it-for-me
           tags: |
