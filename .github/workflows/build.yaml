@@ -28,7 +28,7 @@ jobs:
             type=edge
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@12d39e1bb9d7a0e024b9de8b339a19115b2950fb
+        uses: docker/setup-qemu-action@719c55c4a5a93233ce33aa9366dc90396d60e0ee
 
       # for caching of docker layers see:
       # https://evilmartians.com/chronicles/build-images-on-github-actions-with-docker-layer-caching
