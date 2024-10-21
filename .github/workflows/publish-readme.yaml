@@ -37,7 +37,7 @@ jobs:
           sed -i -E 's#${{ env.BLOB_RELATIVE_LINK_PATTERN }}#\1${{ env.BLOB_ABSOLUTE_LINK_PREFIX }}\2#g'     README.md
 
       - name: Publish README
-        uses: peter-evans/dockerhub-description@067627a8af8c4a66c03b5b5e896968ca4cafba79
+        uses: peter-evans/dockerhub-description@c4521e2ba12709897e4ede483c592313f87565cf
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
