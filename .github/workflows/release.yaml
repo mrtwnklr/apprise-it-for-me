@@ -20,7 +20,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup node.js
-        uses: actions/setup-node@7c29869aec4da703a571b27bcd84d4f15af0b56e
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
 
       - name: Create tag and GitHub release
         run: npx semantic-release
